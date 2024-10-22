@@ -6,7 +6,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import kotlin.math.roundToInt
 
 
 //
@@ -42,10 +45,16 @@ class ImageCompressor(
 
             }
 
-
+            var outputBytes : ByteArray
+            var quality = 100
             do {
+                ByteArrayOutputStream().use { outputStream ->
+                    bitmap.compress(comporessFormat, quality,outputStream)
+                    outputBytes = outputStream.toByteArray()
+                    quality -= (quality * 0.1).roundToInt()
+                }
 
-            }while ()
+            }while (isActive && outputBytes.size > compressionThreshold && quality > 5 && comporessFormat != Bitmap.CompressFormat.PNG)
 
 
         }
