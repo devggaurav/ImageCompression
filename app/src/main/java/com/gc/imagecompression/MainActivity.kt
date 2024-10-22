@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.gc.imagecompression.ui.theme.ImageCompressionTheme
@@ -20,9 +21,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             ImageCompressionTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    PhotoPickerScreen(imageCompressor = remember {
+                        ImageCompressor(applicationContext)
+                    }, fileManager = remember {
+                        FileManager(applicationContext)
+                    },
                         modifier = Modifier.padding(innerPadding)
+
                     )
                 }
             }
