@@ -23,22 +23,23 @@ class FileManager(
             context.contentResolver.openInputStream(contentUri)?.use { inputStream ->
 
                 context.openFileOutput(fileName, Context.MODE_PRIVATE).use { outputStream ->
-                         inputStream.copyTo(outputStream)
+                    inputStream.copyTo(outputStream)
 
                 }
-
-
             }
-
-
         }
-
-
     }
 
-
-
-
+    suspend fun saveImage(
+        bytes: ByteArray,
+        fileName: String,
+    ) {
+        withContext(Dispatchers.IO) {
+            context.openFileOutput(fileName, Context.MODE_PRIVATE).use { outputStream ->
+                outputStream.write(bytes)
+            }
+        }
+    }
 
 
 }
