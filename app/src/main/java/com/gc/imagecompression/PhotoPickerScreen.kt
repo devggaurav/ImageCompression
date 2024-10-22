@@ -3,6 +3,8 @@ package com.gc.imagecompression
 import android.webkit.MimeTypeMap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,10 +28,6 @@ fun PhotoPickerScreen(
     modifier: Modifier = Modifier
 ){
 
-    var compressImage by remember {
-        mutableStateOf<ByteArray?>(null)
-    }
-
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val photoPicker = rememberLauncherForActivityResult(
@@ -52,10 +50,23 @@ fun PhotoPickerScreen(
 
         }
 
+        scope.launch {
+         val compressedImage =   imageCompressor.compressImage(
+                contentUri = contentUri,
+                compressionThreshold = 200 * 1024L
+            )
+         fileManager.saveImage(
+             bytes = compressedImage ?: return@launch,
+             fileName = "compressed.$extension"
+         )
+
+        }
+
 
 
     }
 
+    Box(modifier = Modifier.fillMaxSize())
 
 
 
